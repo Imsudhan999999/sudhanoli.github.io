@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -22,7 +23,8 @@
     <link rel="stylesheet" href="css/icomoon.css">
     <link rel="stylesheet" href="css/style.css">
 
-
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
 <style>
 
@@ -109,6 +111,164 @@
   transform: scale(1.1);
 }
 
+/* Spatial Tools Section Styles */
+.spatial-tools-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 80px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.spatial-tools-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="rgba(255,255,255,0.1)" points="0,1000 1000,0 1000,1000"/></svg>');
+  background-size: cover;
+}
+
+.spatial-tools-section .container {
+  position: relative;
+  z-index: 2;
+}
+
+.spatial-tools-section .big {
+  font-size: 8rem;
+  font-weight: 100;
+  color: rgba(255,255,255,0.1);
+  margin-bottom: 0;
+  line-height: 1;
+}
+
+.spatial-tools-section h2 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.spatial-tools-section p {
+  color: rgba(255,255,255,0.9);
+  font-size: 1.1rem;
+  margin-bottom: 3rem;
+}
+
+#spatial-map {
+  height: 500px;
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  border: 3px solid rgba(255,255,255,0.2);
+}
+
+.spatial-controls {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+.spatial-btn {
+  background: linear-gradient(45deg, #ff9a9e, #fecfef);
+  border: none;
+  color: white;
+  padding: 15px 30px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(255, 154, 158, 0.4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.spatial-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(255, 154, 158, 0.6);
+  background: linear-gradient(45deg, #fecfef, #ff9a9e);
+}
+
+.spatial-btn:active {
+  transform: translateY(-1px);
+}
+
+.spatial-btn i {
+  font-size: 1.2rem;
+}
+
+.measurement-info {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 15px;
+  margin-top: 20px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+.measurement-info h5 {
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.measurement-info p {
+  color: #666;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Custom Leaflet popup styles */
+.leaflet-popup-content-wrapper {
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.leaflet-popup-tip {
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Custom marker styles */
+.hometown-marker {
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  #spatial-map {
+    height: 350px;
+  }
+  
+  .spatial-controls {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .spatial-btn {
+    width: 100%;
+    max-width: 280px;
+    justify-content: center;
+  }
+}
 
 </style>
 
@@ -129,6 +289,7 @@
 	          <li class="nav-item"><a href="#home-section" class="nav-link"><span>Home</span></a></li>
 	          <li class="nav-item"><a href="#about-section" class="nav-link"><span>About</span></a></li>
 	          <li class="nav-item"><a href="#resume-section" class="nav-link"><span>Resume</span></a></li>
+	          <li class="nav-item"><a href="#spatial-section" class="nav-link"><span>Spatial Tools</span></a></li>
 	          <li class="nav-item"><a href="#contact-section" class="nav-link"><span>Contact</span></a></li>
 	        </ul>
 	      </div>
@@ -379,13 +540,48 @@
     	</div>
     </section>
 
-   
+    <!-- Spatial Tools Section -->
+    <section class="ftco-section spatial-tools-section" id="spatial-section">
+      <div class="container">
+        <div class="row justify-content-center pb-5">
+          <div class="col-md-10 heading-section text-center ftco-animate">
+            <h1 class="big big-2">Spatial Tools</h1>
+            <h2 class="mb-4">Interactive Spatial Tools</h2>
+            <p>Explore interactive mapping tools including base map switching, hometown navigation, and distance measurement capabilities.</p>
+          </div>
+        </div>
 
-    <!-- <section >
-      
-	</section> --> 
+        <div class="row">
+          <div class="col-12">
+            <!-- Map Container -->
+            <div id="spatial-map"></div>
+            
+            <!-- Control Buttons -->
+            <div class="spatial-controls">
+              <button id="hometown-btn" class="spatial-btn">
+                <i class="icon-home"></i>
+                Go to Home Town
+              </button>
+              <button id="measure-btn" class="spatial-btn">
+                <i class="icon-ruler"></i>
+                Measure Distance
+              </button>
+              <button id="clear-btn" class="spatial-btn">
+                <i class="icon-trash"></i>
+                Clear Measurements
+              </button>
+            </div>
 
-
+            <!-- Measurement Info -->
+            <div id="measurement-info" class="measurement-info" style="display: none;">
+              <h5>Distance Measurement</h5>
+              <p>Click on the map to start measuring distances between points.</p>
+              <div id="distance-display"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <section class="ftco-section contact-section ftco-no-pb" id="contact-section">
       <div class="container">
@@ -477,6 +673,186 @@
   <script src="js/scrollax.min.js"></script>
   
   <script src="js/main.js"></script>
+
+  <!-- Leaflet JavaScript -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Spatial Tools JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize the map
+      const spatialMap = L.map('spatial-map').setView([28.6378, 82.4978], 8);
+
+      // Base layers
+      const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 19
+      });
+
+      const esriSatellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+        maxZoom: 19
+      });
+
+      const topoLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data: © OpenStreetMap contributors, SRTM | Map style: © OpenTopoMap (CC-BY-SA)',
+        maxZoom: 17
+      });
+
+      // Add default layer
+      osmLayer.addTo(spatialMap);
+
+      // Base layers control
+      const baseLayers = {
+        "OpenStreetMap": osmLayer,
+        "Esri Satellite": esriSatellite,  
+        "Topographic": topoLayer
+      };
+
+      L.control.layers(baseLayers).addTo(spatialMap);
+
+      // Hometown marker
+      const hometownCoords = [28.6378, 82.4978];
+      
+      const hometownIcon = L.divIcon({
+        html: '<i class="icon-home" style="color: #ff9a9e; font-size: 32px; text-shadow: 2px 2px 6px rgba(0,0,0,0.5); filter: drop-shadow(0 0 8px rgba(255, 154, 158, 0.6));"></i>',
+        iconSize: [40, 40],
+        className: 'hometown-marker'
+      });
+
+      const hometownMarker = L.marker(hometownCoords, { icon: hometownIcon })
+        .addTo(spatialMap)
+        .bindPopup(`
+          <div style="text-align: center; padding: 15px; min-width: 220px; font-family: 'Poppins', sans-serif;">
+            <h5 style="color: #667eea; margin-bottom: 12px; font-weight: bold; font-size: 1.1rem;">🏠 My Hometown</h5>
+            <p style="margin-bottom: 8px; font-weight: 600; color: #2c3e50;"><strong>Rukum District</strong></p>
+            <p style="margin-bottom: 8px; color: #666;">Mid-Western Nepal</p>
+            <p style="margin: 0; font-size: 12px; color: #888; font-style: italic;">
+              Coordinates: ${hometownCoords[0].toFixed(4)}°N, ${hometownCoords[1].toFixed(4)}°E
+            </p>
+          </div>
+        `);
+
+      // Distance measurement variables
+      let measureMode = false;
+      let measurementPoints = [];
+      let measurementLines = [];
+      let totalDistance = 0;
+
+      // Hometown button functionality
+      document.getElementById('hometown-btn').addEventListener('click', function() {
+        spatialMap.flyTo(hometownCoords, 12, {
+          animate: true,
+          duration: 2.5
+        });
+        
+        setTimeout(() => {
+          hometownMarker.openPopup();
+        }, 2600);
+
+        // Enhanced button animation
+        this.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          this.style.transform = 'translateY(-3px)';
+        }, 150);
+      });
+
+      // Measure button functionality
+      document.getElementById('measure-btn').addEventListener('click', function() {
+        measureMode = !measureMode;
+        const measureInfo = document.getElementById('measurement-info');
+        
+        if (measureMode) {
+          this.innerHTML = '<i class="icon-pause"></i> Stop Measuring';
+          this.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
+          measureInfo.style.display = 'block';
+          spatialMap.getContainer().style.cursor = 'crosshair';
+        } else {
+          this.innerHTML = '<i class="icon-ruler"></i> Measure Distance';
+          this.style.background = 'linear-gradient(45deg, #ff9a9e, #fecfef)';
+          spatialMap.getContainer().style.cursor = '';
+        }
+      });
+
+      // Clear button functionality
+      document.getElementById('clear-btn').addEventListener('click', function() {
+        // Clear all measurement lines and points
+        measurementLines.forEach(line => spatialMap.removeLayer(line));
+        measurementPoints.forEach(point => spatialMap.removeLayer(point));
+        
+        measurementLines = [];
+        measurementPoints = [];
+        totalDistance = 0;
+        
+        document.getElementById('distance-display').innerHTML = '';
+        document.getElementById('measurement-info').style.display = 'none';
+        
+        // Reset measure button
+        const measureBtn = document.getElementById('measure-btn');
+        measureBtn.innerHTML = '<i class="icon-ruler"></i> Measure Distance';
+        measureBtn.style.background = 'linear-gradient(45deg, #ff9a9e, #fecfef)';
+        measureMode = false;
+        spatialMap.getContainer().style.cursor = '';
+      });
+
+      // Map click event for distance measurement
+      spatialMap.on('click', function(e) {
+        if (!measureMode) return;
+
+        const clickedPoint = e.latlng;
+        
+        // Add point marker with enhanced styling
+        const pointMarker = L.circleMarker(clickedPoint, {
+          radius: 8,
+          fillColor: '#ff9a9e',
+          color: '#fff',
+          weight: 3,
+          opacity: 1,
+          fillOpacity: 0.9
+        }).addTo(spatialMap);
+        
+        measurementPoints.push(pointMarker);
+
+        if (measurementPoints.length > 1) {
+          // Calculate distance to previous point
+          const prevPoint = measurementPoints[measurementPoints.length - 2].getLatLng();
+          const distance = spatialMap.distance(prevPoint, clickedPoint);
+          
+          // Add line between points with enhanced styling
+          const line = L.polyline([prevPoint, clickedPoint], {
+            color: '#ff9a9e',
+            weight: 4,
+            opacity: 0.8,
+            dashArray: '10, 5'
+          }).addTo(spatialMap);
+          
+          measurementLines.push(line);
+          totalDistance += distance;
+
+          // Update distance display
+          const distanceKm = (totalDistance / 1000).toFixed(2);
+          const distanceM = Math.round(totalDistance);
+          
+          document.getElementById('distance-display').innerHTML = `
+            <div style="background: linear-gradient(45deg, #667eea, #764ba2); color: white; padding: 15px; border-radius: 10px; margin-top: 10px;">
+              <p style="margin: 0; font-size: 1.1rem; font-weight: 600;"><strong>Total Distance:</strong> ${distanceKm} km (${distanceM} m)</p>
+              <p style="margin: 5px 0 0 0; opacity: 0.9;"><strong>Points:</strong> ${measurementPoints.length}</p>
+              <p style="margin: 5px 0 0 0; font-size: 0.9rem; opacity: 0.8;"><em>Click to add more points or use Clear to reset</em></p>
+            </div>
+          `;
+        } else {
+          document.getElementById('distance-display').innerHTML = `
+            <div style="background: linear-gradient(45deg, #667eea, #764ba2); color: white; padding: 15px; border-radius: 10px; margin-top: 10px;">
+              <p style="margin: 0; font-weight: 600;"><strong>Starting point set</strong></p>
+              <p style="margin: 5px 0 0 0; font-size: 0.9rem; opacity: 0.8;"><em>Click another point to measure distance</em></p>
+            </div>
+          `;
+        }
+      });
+
+      console.log('Spatial tools initialized successfully');
+    });
+  </script>
     
   </body>
 </html>
